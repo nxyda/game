@@ -1,22 +1,46 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+const gameOverScreen = document.getElementById('gameOverScreen');
+const restartButton = document.getElementById('restartButton');
+const scoreElement = document.getElementById('score');
+let score = 0;
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.width = 400;
+canvas.height = 300;
 
 const player = {
     x: canvas.width / 2,
-    y: canvas.height - 50,
-    width: 30,
-    height: 30,
+    y: canvas.height - 60,
+    width: 40,
+    height: 40,
     speed: 5,
     direction: 1,
 };
 
 const spikes = [];
-const spikeWidth = 30;
-const spikeHeight = 30;
-const spikeSpeed = 2;
+const spikeWidth = 40;
+const spikeHeight = 40;
+const spikeSpeed = 2.5;
+let gameOver = false;
+
+
+
+function updateScore() {
+    score++;
+    scoreElement.textContent = "Punkty: " + score;
+}
+
+
+function initializeGame() {
+    player.x = canvas.width / 2;
+    player.y = canvas.height - 60;
+    spikes.length = 0;
+    score = 0;
+    updateScore();
+    gameOver = false;
+    gameOverScreen.style.display = 'none';
+    gameLoop();
+}
 
 function createSpike() {
     const x = Math.random() * (canvas.width - spikeWidth);
@@ -37,8 +61,7 @@ function updateSpikes() {
         if (spikes[i].y > canvas.height) {
             spikes.splice(i, 1);
         } else if (checkCollision(player, spikes[i])) {
-            alert('Game Over!');
-            document.location.reload();
+            endGame();
         }
     }
 }
@@ -72,20 +95,36 @@ function clearCanvas() {
 }
 
 function gameLoop() {
-    clearCanvas();
-    updatePlayer();
-    updateSpikes();
-    drawPlayer();
-    drawSpikes();
-    requestAnimationFrame(gameLoop);
+    if (!gameOver) {
+        clearCanvas();
+        updatePlayer();
+        updateSpikes();
+        drawPlayer();
+        drawSpikes();
+        requestAnimationFrame(gameLoop);
+    }
+}
+
+function endGame() {
+    gameOver = true;
+    gameOverScreen.style.display = 'flex';
+    clearInterval(scoreTimer);
+}
+
+function restartGame() {
+    clearInterval(scoreTimer);
+    initializeGame();
+    scoreTimer = setInterval(updateScore, 1000);
 }
 
 document.addEventListener('keydown', (e) => {
-    if (e.code === 'Space') {
+    if (e.code === 'Space' && !gameOver) {
         player.direction *= -1;
     }
 });
 
-setInterval(createSpike, 1000);
+restartButton.addEventListener('click', restartGame);
 
-gameLoop();
+setInterval(createSpike, 1000);
+let scoreTimer = setInterval(updateScore, 1000);
+initializeGame(); 

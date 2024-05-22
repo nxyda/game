@@ -1,9 +1,54 @@
 body {
     margin: 0;
-    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
 }
 
 canvas {
-    display: block;
-    background-color: #f0f0f0;
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    width: 400px;
+    height: 300px;
+}
+
+.hidden {
+    display: none;
+}
+
+#gameOverScreen {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    width: 400px;
+    height: 300px;
+    text-align: center;
+}
+
+#gameOverScreen h1 {
+    margin: 0;
+    font-size: 3em;
+}
+
+#gameOverScreen button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1.2em;
+}
+
+#score {
+    position: absolute;
+    top: 340px;
+    left: 0;
+    right: 0;
+    color: #000;
+    font-size: 24px;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
 }
