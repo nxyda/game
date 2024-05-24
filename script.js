@@ -13,9 +13,9 @@ const playerImg = new Image();
 const spikeImg = new Image();
 const circleImg = new Image();
 
-playerImg.src = 'player.png';
-spikeImg.src = 'spike.png';
-circleImg.src = 'circle.png';
+playerImg.src = 'src/player.png';
+spikeImg.src = 'src/spike.png';
+circleImg.src = 'src/circle.png';
 
 const player = {
     x: canvas.width / 2,
