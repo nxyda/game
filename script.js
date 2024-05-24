@@ -9,6 +9,14 @@ let scoreTimer;
 canvas.width = 400;
 canvas.height = 300;
 
+const playerImg = new Image();
+const spikeImg = new Image();
+const circleImg = new Image();
+
+playerImg.src = 'player.png';
+spikeImg.src = 'spike.png';
+circleImg.src = 'circle.png';
+
 const player = {
     x: canvas.width / 2,
     y: canvas.height - 60,
@@ -103,24 +111,19 @@ function drawPlayer() {
     ctx.fillRect(player.x, player.y, player.width, player.height);
 }
 
+function drawPlayer() {
+    ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
+}
+
 function drawSpikes() {
-    ctx.fillStyle = 'red';
     for (const spike of spikes) {
-        ctx.beginPath();
-        ctx.moveTo(spike.x, spike.y + spike.height);
-        ctx.lineTo(spike.x + spike.width / 2, spike.y);
-        ctx.lineTo(spike.x + spike.width, spike.y + spike.height);
-        ctx.closePath();
-        ctx.fill();
+        ctx.drawImage(spikeImg, spike.x, spike.y, spike.width, spike.height);
     }
 }
 
 function drawCircles() {
-    ctx.fillStyle = 'yellow';
     for (const circle of circles) {
-        ctx.beginPath();
-        ctx.arc(circle.x + circle.width / 2, circle.y + circle.height / 2, circle.width / 2, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.drawImage(circleImg, circle.x, circle.y, circle.width, circle.height);
     }
 }
 
