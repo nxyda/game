@@ -4,6 +4,7 @@ const gameOverScreen = document.getElementById('gameOverScreen');
 const restartButton = document.getElementById('restartButton');
 const scoreElement = document.getElementById('score');
 let score = 0;
+let scoreTimer;
 
 canvas.width = 400;
 canvas.height = 300;
@@ -33,13 +34,17 @@ function updateScore() {
     scoreElement.textContent = "Punkty: " + score;
 }
 
+function startUpdateScore() {
+    score = 0;
+    scoreElement.textContent = "Punkty: " + score;
+}
+
 function initializeGame() {
     player.x = canvas.width / 2;
     player.y = canvas.height - 60;
     spikes.length = 0;
     circles.length = 0;
-    score = 0;
-    updateScore();
+    startUpdateScore();
     gameOver = false;
     gameOverScreen.style.display = 'none';
     gameLoop();
