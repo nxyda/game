@@ -23,18 +23,21 @@ const spikeHeight = 40;
 const spikeSpeed = 2.5;
 let gameOver = false;
 
-
+const circles = [];
+const circleWidth = 40;
+const circleHeight = 40;
+const circleSpeed = 2.5;
 
 function updateScore() {
     score++;
     scoreElement.textContent = "Punkty: " + score;
 }
 
-
 function initializeGame() {
     player.x = canvas.width / 2;
     player.y = canvas.height - 60;
     spikes.length = 0;
+    circles.length = 0;
     score = 0;
     updateScore();
     gameOver = false;
@@ -45,6 +48,11 @@ function initializeGame() {
 function createSpike() {
     const x = Math.random() * (canvas.width - spikeWidth);
     spikes.push({ x, y: 0, width: spikeWidth, height: spikeHeight });
+}
+
+function createCircles() {
+    const x = Math.random() * (canvas.width - circleWidth);
+    circles.push({ x, y: 0, width: circleWidth, height: circleHeight });
 }
 
 function updatePlayer() {
@@ -66,11 +74,23 @@ function updateSpikes() {
     }
 }
 
-function checkCollision(player, spike) {
-    return !(player.x > spike.x + spike.width ||
-        player.x + player.width < spike.x ||
-        player.y > spike.y + spike.height ||
-        player.y + player.height < spike.y);
+function updateCircles() {
+    for (let i = circles.length - 1; i >= 0; i--) {
+        circles[i].y += circleSpeed;
+        if (circles[i].y > canvas.height) {
+            circles.splice(i, 1);
+        } else if (checkCollision(player, circles[i])) {
+            updateScore();
+            circles.splice(i, 1);
+        }
+    }
+}
+
+function checkCollision(player, object) {
+    return !(player.x > object.x + object.width ||
+        player.x + player.width < object.x ||
+        player.y > object.y + object.height ||
+        player.y + player.height < object.y);
 }
 
 function drawPlayer() {
@@ -90,6 +110,15 @@ function drawSpikes() {
     }
 }
 
+function drawCircles() {
+    ctx.fillStyle = 'yellow';
+    for (const circle of circles) {
+        ctx.beginPath();
+        ctx.arc(circle.x + circle.width / 2, circle.y + circle.height / 2, circle.width / 2, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
 function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
@@ -99,8 +128,10 @@ function gameLoop() {
         clearCanvas();
         updatePlayer();
         updateSpikes();
+        updateCircles();
         drawPlayer();
         drawSpikes();
+        drawCircles();
         requestAnimationFrame(gameLoop);
     }
 }
@@ -114,7 +145,6 @@ function endGame() {
 function restartGame() {
     clearInterval(scoreTimer);
     initializeGame();
-    scoreTimer = setInterval(updateScore, 1000);
 }
 
 document.addEventListener('keydown', (e) => {
@@ -126,5 +156,5 @@ document.addEventListener('keydown', (e) => {
 restartButton.addEventListener('click', restartGame);
 
 setInterval(createSpike, 1000);
-let scoreTimer = setInterval(updateScore, 1000);
-initializeGame(); 
+setInterval(createCircles, 2000);
+initializeGame();
